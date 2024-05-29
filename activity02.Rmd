@@ -132,7 +132,7 @@ To begin, we will create a `{parsnip}` specification for a linear model.
 
 -   In the code chunk below titled `parsnip-spec`, replace "verbatim" with "r" just before the code chunk title.
 
-```{verbatim parsnip-spec}
+```{r parsnip-spec}
 lm_spec <- linear_reg() %>%
   set_mode("regression") %>%
   set_engine("lm")
@@ -162,3 +162,133 @@ The above code fits our SLR model, then provides a `tidy` parameter estimates ta
 $\widehat{\texttt{pf\\_score}} = intercept + slope \times \texttt{pf\\_expression\\_control}$
 
 6.  Interpret each of the estimated parameters from (5) in the context of this research question. That is, what do these values represent?
+
+## Day 2
+
+Hopefully, you were able to interpret the SLR model parameter estimates (i.e., the *y*-intercept and slope) as follows:
+
+> For countries with a `pf_expression_control` of 0 (those with the largest amount of political pressure on media content), we expect their mean personal freedom score to be 4.28.
+
+> For every 1 unit increase in `pf_expression_control` (political pressure on media content index), we expect a country's mean personal freedom score to increase 0.542 units.
+
+### 4. Assessing
+
+#### 4.A: Assess with your Day 1 model
+
+To assess our model fit, we can use $R^2$ (the coefficient of determination), the proportion of variability in the response variable that is explained by the explanatory variable. We use `glance` from `{broom}` (which is automatically loaded with `{tidymodels}` - `{broom}` is also where `tidy` is from) to access this information.
+
+-   In the code chunk below titled `glance-lm`, replace "verbatim" with "r" just before the code chunk title.
+
+```{r glance-mod}
+glance(slr_mod)
+```
+
+After doing this and running the code, answer the following questions:
+
+7.  What is the value of $R^2$ for this model?
+
+8.  What does this value mean in the context of this model? Think about what would a "good" value of $R^2$ would be? Can/should this value be "perfect"?
+
+#### 4.B: Assess with test/train
+
+You previously fit a model and evaluated it using the exact same data. This is a bit of circular reasoning and does not provide much information about the model's performance. Now we will work through the test/train process of fitting and assessing a simple linear regression model.
+
+Using the `diamonds` example provided to you in the Day 2 `README`, do the following
+
+-   Create a new R code chunk and provide it with a descriptive tile (e.g., `train-test`).
+-   Set a seed.
+-   Create an initial 80-20 split of the `hfi_2016` dataset
+-   Using your initial split R object, assign the two splits into a training R object and a testing R object.
+
+Now, you will use your training dataset to fit a SLR model.
+
+-   In the code chunk below titled `train-fit-lm`, replace "verbatim" with "r" just before the code chunk title and update the data set to your training R object you just created.
+
+```{r train-fit-lm}
+slr_train <- lm_spec %>% 
+  fit(pf_score ~ pf_expression_control, data = hfi_2016)
+
+tidy(slr_train)
+```
+
+Notice that you can reuse the `lm_spec` specification because we are still doing a linear model.
+
+9.  Using the `tidy` output, update the below formula with the estimated parameters. That is, replace "intercept" and "slope" with the appropriate values
+
+$\widehat{\texttt{pf\\_score}} = intercept + slope \times \texttt{pf\\_expression\\_control}$
+
+10. Interpret each of the estimated parameters from (10) in the context of this research question. That is, what do these values represent?
+
+Now we will assess using the testing data set.
+
+-   In the code chunk below titled `train-fit-lm`, replace "verbatim" with "r" just before the code chunk title and update `data_test` to whatever R object you assigned your testing data to above.
+
+```{r glance-test}
+test_aug <- augment(slr_train, new_data = data_test)
+test_aug
+```
+
+This takes your SLR model and applies it to your testing data.
+
+![check-in](../README-img/noun-magnifying-glass.png) **Check in**
+
+Look at the various information produced by this code. Can you identify what each column represents?
+
+The `.pred` column in this output can also be obtained by using `predict` (i.e., `predict(slr_fit, new_data = data_test)`)
+
+11. Now, using your responses to (7) and (8) as an example, assess how well your model fits your testing data. Compare your results here to your results from your Day 1 of this activity. Did this model perform any differently?
+
+### Model diagnostics
+
+To assess whether the linear model is reliable, we should check for (1) linearity, (2) nearly normal residuals, and (3) constant variability. Note that the normal residuals is not really necessary for all models (sometimes we simply want to describe a relationship for the data that we have or population-level data, where statistical inference is not appropriate/necessary).
+
+In order to do these checks we need access to the fitted (predicted) values and the residuals. We can use `broom::augment` to calculate these.
+
+-   In the code chunk below titled `augment`, replace "verbatim" with "r" just before the code chunk title and update `data_train` to whatever R object you assigned your training data to above.
+
+```{r augment}
+train_aug <- augment(slr_train, new_data = data_train)
+train_aug
+```
+
+**Linearity**: You already checked if the relationship between `pf_score` and `pf_expression_control` is linear using a scatterplot. We should also verify this condition with a plot of the residuals vs. fitted (predicted) values.
+
+-   In the code chunk below titled `fitted-residual`, replace "verbatim" with "r" just before the code chunk title.
+
+```{r fitted-residual}
+ggplot(data = train_aug, aes(x = .pred, y = .resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "red") +
+  xlab("Fitted values") +
+  ylab("Residuals")
+```
+
+Notice here that `train_aug` can also serve as a data set because stored within it are the fitted values ($\hat{y}$) and the residuals. Also note that we are getting fancy with the code here. After creating the scatterplot on the first layer (first line of code), we overlay a red horizontal dashed line at $y = 0$ (to help us check whether the residuals are distributed around 0), and we also rename the axis labels to be more informative.
+
+Answer the following question:
+
+11. Is there any apparent pattern in the residuals plot? What does this indicate about the linearity of the relationship between the two variables?
+
+**Nearly normal residuals**: To check this condition, we can look at a histogram of the residuals.
+
+-   In the code chunk below titled `residual-histogram`, replace "verbatim" with "r" just before the code chunk title.
+
+```{r fitted-residual}
+ggplot(data = train_aug, aes(x = .resid)) +
+  geom_histogram(binwidth = 0.25) +
+  xlab("Residuals")
+```
+
+Answer the following question:
+
+12. Based on the histogram, does the nearly normal residuals condition appear to be violated? Why or why not?
+
+**Constant variability**:
+
+13. Based on the residuals vs. fitted plot, does the constant variability condition appear to be violated? Why or why not?
+
+## Attribution
+
+This document is based on labs from [OpenIntro](https://www.openintro.org/).
+
+<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" alt="Creative Commons License" style="border-width:0"/></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.

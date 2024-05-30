@@ -1,10 +1,8 @@
 ---
 title: "activity02"
 output: html_document
-date: "`r Sys.Date`"
-editor_options: 
-  markdown: 
-    wrap: sentence
+author: "Cyril Owuor"
+output: github_document
 ---
 
 ```{r setup, include=FALSE}
@@ -289,7 +287,7 @@ train_aug
 
 -   In the code chunk below titled `fitted-residual`, replace "verbatim" with "r" just before the code chunk title.
 
-```{r fitted-residual}
+```{r fitted}
 ggplot(data = train_aug, aes(x = .pred, y = .resid)) +
   geom_point() +
   geom_hline(yintercept = 0, linetype = "dashed", color = "red") +

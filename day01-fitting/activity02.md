@@ -2,6 +2,54 @@ Activity 02
 ================
 Cyril Owuor
 
+### A typical modeling process
+
+The process that we will use for today’s activity is:
+
+1.  Identify our research question(s),
+2.  Explore (graphically and with numerical summaries) the variables of
+    interest - both individually and in relationship to one another,
+3.  Fit a simple linear regression model to obtain and describe model
+    estimates,
+4.  Assess how “good” our model is, and
+5.  Predict new values.
+
+We will continue to update/tweak/adapt this process and you are
+encouraged to build your own process. Before we begin, we set up our R
+session and introduce this activity’s data.
+
+## Day 1
+
+### The setup
+
+We will be using two packages from Posit (formerly
+[RStudio](https://posit.co/)): `{tidyverse}` and `{tidymodels}`. If you
+would like to try the *ISLR* labs using these two packages instead of
+base R, [Emil Hvitfeldt](https://www.emilhvitfeldt.com/) (of Posit) has
+put together a [complementary online
+text](https://emilhvitfeldt.github.io/ISLR-tidymodels-labs/index.html).
+
+- In the **Packages** pane of RStudio (same area as **Files**), check to
+  see if `{tidyverse}` and `{tidymodels}` are installed. Be sure to
+  check both your **User Library** and **System Library**.
+
+- If either of these are not currently listed, type the following in
+  your **Console** pane, replacing `package_name` with the appropriate
+  name, and press Enter/Return afterwards.
+
+  ``` r
+  # Note: the "eval = FALSE" in the above line tells R not to evaluate this code
+  #install.packages("package_name")
+  ```
+
+- Once you have verified that both `{tidyverse}` and `{tidymodels}` are
+  installed, load these packages in the R chunk below titled `setup` by
+  removing the “`, eval = FALSE`” portion in the code chunk options.
+
+- Run the `setup` code chunk and/or **knit**
+  <img src="../README-img/knit-icon.png" alt="knit" width="20"/> icon
+  your Rmd document to verify that no errors occur.
+
 ### The data
 
 The data we’re working with is from the OpenIntro site:

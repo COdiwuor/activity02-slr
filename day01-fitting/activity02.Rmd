@@ -47,6 +47,7 @@ library(knitr)
 library(skimr)
 library(ggplot2)
 library(broom)
+library(ggplot)
 library(ggpubr)
 ```
 
@@ -63,8 +64,8 @@ In the R code chunk below titled `load-data`, you will type the code that reads 
 
 - Rather than downloading this file, uploading to RStudio, then reading it in, explore how to load this file directly from the provided URL with `readr::read_csv` (`{readr}` is part of `{tidyverse}`).
 - Assign this data set into a data frame named `hfi` (short for "Human Freedom Index").
-```{r}
-hfi <- read_csv("hfi.csv")
+```{r hfi}
+hfi <- read.csv("hfi.csv")
 hfi
 ```
 
@@ -90,7 +91,7 @@ In the R code chunk below titled `hfi-2016`, type the code that does the followi
 
 ```{r hfi-2016}
 hfi_2016 <- hfi |>
-  filter(year == 2016)
+  dplyr::filter(year == 2016)
 hfi_2016
 ```
 
@@ -115,8 +116,9 @@ Answer the following questions (use your markdown skills) and complete the follo
 - In the R code chunk below titled `univariable-plots`, type the R code that displays this plot for `pf_expression_control`.
 
 ```{r distribution-plots}
+library(ggplot2)
 # Histogram for pf_score
-ggplot(hfi_2016, aes(x = pf_score)) +
+hfi_2016 |> ggplot(aes(x = pf_score)) +
   geom_histogram(binwidth = 1, fill = "blue", color = "black") +
   labs(title = "Distribution of Personal Freedom Scores",
        x = "Personal Freedom Score",
@@ -124,7 +126,7 @@ ggplot(hfi_2016, aes(x = pf_score)) +
   theme_minimal()
 
 # Histogram for pf_expression_control
-ggplot(hfi_2016, aes(x = pf_expression_control)) +
+hfi_2016 |> ggplot(aes(x = pf_expression_control)) +
   geom_histogram(binwidth = 1, fill = "green", color = "black") +
   labs(title = "Distribution of Political Pressures and Controls on Media Content Index",
        x = "Political Pressures and Controls on Media Content Index",
@@ -198,8 +200,9 @@ What numerical summary would you use to describe the relationship between two nu
 (hint: explore the `cor` function from Base R)
 
 ```{r challenge}
+library(dplyr)
 # 1. Summary statistics for pf_score
-pf_score_summary <- hfi_2016 %>%
+pf_score_summary <- hfi_2016 |>
   summarize(
     mean_pf_score = mean(pf_score),
     median_pf_score = median(pf_score),
@@ -209,7 +212,7 @@ pf_score_summary <- hfi_2016 %>%
   )
 
 # 2. Summary statistics for pf_expression_control
-pf_expression_control_summary <- hfi_2016 %>%
+pf_expression_control_summary <- hfi_2016 |>
   summarize(
     mean_pf_expression_control = mean(pf_expression_control),
     median_pf_expression_control = median(pf_expression_control),
@@ -235,6 +238,7 @@ To begin, we will create a `{parsnip}` specification for a linear model.
 - In the code chunk below titled `parsnip-spec`, replace "verbatim" with "r" just before the code chunk title.
 
 ```{r parsnip-spec}
+library(tidymodels)
 lm_spec <- linear_reg() %>%
   set_mode("regression") %>%
   set_engine("lm")

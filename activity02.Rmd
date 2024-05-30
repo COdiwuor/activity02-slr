@@ -11,7 +11,13 @@ editor_options:
 #knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(tidymodels)
+library(tidymodels)
+library(dplyr)
+library(readr)
+library(knitr)
+library(skimr)
 library(ggplot2)
+library(broom)
 ```
 
 ### The data
@@ -96,6 +102,10 @@ ggplot(hfi_2016, aes(x = pf_expression_control)) +
 4.  Comment on each of these two distributions. Be sure to describe their centers, spread, shape, and any potential outliers.
 **The pf_score is left skewed and does not have an outlier. The pf_expression_control is a bimodal and does not have an outlier.**
 
+**The distribution of personal freedom score`pf_score` is left skewed with a mean of 6.98 and a standard deviation of 1.49. This means that is a small variance between personal freedom score and most people tend to have a higher score with a few outliers.**
+
+**The distribution for political pressures and controls is almost normal with a mean of 4.98 and a standard deviation of 2.32. This means that there is a greater variance between the index of political pressures and controls on media. **
+
 5.  What type of plot would you use to display the relationship between the personal freedom score, `pf_score`, and the political pressures and controls on media content index,`pf_expression_control`?
 
 **To display the relationship between the personal freedom score (pf_score) and the political pressures and controls on media content index (pf_expression_control), a scatter plot would be an appropriate choice. Scatter plots allow us to visualize the relationship between two continuous variables and can help identify patterns, correlations, and potential outliers.**
@@ -113,6 +123,8 @@ ggplot(hfi_2016, aes(x = pf_expression_control, y = pf_score)) +
 ```
 
 4.  Does the relationship look linear? If you knew a country's `pf_expression_control`, or its score out of 10, with 0 being the most, of political pressures and controls on media content, would you be comfortable using a linear model to predict the personal freedom score?
+
+**Yes the relationship between `pf_score` and `pf_expression_control` is linear with an increasing trend, this means that an increase `pf_expression control` causes an increase in `pf_score`.**
 
 #### Challenge
 
@@ -164,7 +176,7 @@ The above code fits our SLR model, then provides a `tidy` parameter estimates ta
 
 5.  Using the `tidy` output, update the below formula with the estimated parameters. That is, replace "intercept" and "slope" with the appropriate values
 
-$\widehat{\texttt{pf\\_score}} = intercept + slope \times \texttt{pf\\_expression\\_control}$
+$\widehat{\texttt{pf\\_score}} = 4.284 + 0.542 \times \texttt{pf\\_expression\\_control}$
 
 6.  Interpret each of the estimated parameters from (5) in the context of this research question. That is, what do these values represent?
 
@@ -191,9 +203,11 @@ glance(slr_mod)
 After doing this and running the code, answer the following questions:
 
 7.  What is the value of $R^2$ for this model?
-0.714
+The $R^2$ of this model is 0.714.
 
 8.  What does this value mean in the context of this model? Think about what would a "good" value of $R^2$ would be? Can/should this value be "perfect"?
+
+**71% of the variance in `pf_score` can be explained by `pf_expression_control`. This means that the model fits the data fairly well.**
 
 #### 4.B: Assess with test/train
 
@@ -234,7 +248,7 @@ Notice that you can reuse the `lm_spec` specification because we are still doing
 
 9.  Using the `tidy` output, update the below formula with the estimated parameters. That is, replace "intercept" and "slope" with the appropriate values
 
-$\widehat{\texttt{pf\\_score}} = intercept + slope \times \texttt{pf\\_expression\\_control}$
+$\widehat{\texttt{pf\\_score}} = 4.321 + 0.536 \times \texttt{pf\\_expression\\_control}$
 
 10. Interpret each of the estimated parameters from (10) in the context of this research question. That is, what do these values represent?
 
@@ -256,6 +270,7 @@ Look at the various information produced by this code. Can you identify what eac
 The `.pred` column in this output can also be obtained by using `predict` (i.e., `predict(slr_fit, new_data = data_test)`)
 
 11. Now, using your responses to (7) and (8) as an example, assess how well your model fits your testing data. Compare your results here to your results from your Day 1 of this activity. Did this model perform any differently?
+
 
 ### Model diagnostics
 
@@ -288,6 +303,9 @@ Answer the following question:
 
 11. Is there any apparent pattern in the residuals plot? What does this indicate about the linearity of the relationship between the two variables?
 
+**The assumption of linearity has been met as we can see that the points on the residual plot are randomly distributed and have no pattern.**
+
+
 **Nearly normal residuals**: To check this condition, we can look at a histogram of the residuals.
 
 -   In the code chunk below titled `residual-histogram`, replace "verbatim" with "r" just before the code chunk title.
@@ -302,9 +320,13 @@ Answer the following question:
 
 12. Based on the histogram, does the nearly normal residuals condition appear to be violated? Why or why not?
 
+**From the histogram above, it shows that the condition for normality has been violated, this can be seen by the shape of the histogram which does not have a bell shaped.**
+
 **Constant variability**:
 
 13. Based on the residuals vs. fitted plot, does the constant variability condition appear to be violated? Why or why not?
+
+**The assumption of constant variance has been met. The points on the residual plots appear to be randomly distributed.**
 
 ## Attribution
 

@@ -1,4 +1,4 @@
-activity02
+Activity 02
 ================
 Cyril Owuor
 

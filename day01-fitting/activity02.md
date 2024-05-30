@@ -1,4 +1,4 @@
-Activity 2
+Activity02
 ================
 Cyril Owuor
 
@@ -40431,7 +40431,7 @@ library(tidymodels)
     ## ✖ dplyr::filter()  masks stats::filter()
     ## ✖ dplyr::lag()     masks stats::lag()
     ## ✖ recipes::step()  masks stats::step()
-    ## • Learn how to get started at https://www.tidymodels.org/start/
+    ## • Dig deeper into tidy modeling with R at https://www.tmwr.org
 
 ``` r
 lm_spec <- linear_reg() %>%

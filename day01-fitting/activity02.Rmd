@@ -1,5 +1,5 @@
 ---
-title: "Activity 2"
+title: "Activity02"
 author: "Cyril Owuor"
 output: github_document
 ---

@@ -363,7 +363,7 @@ Now we will assess using the testing data set.
 - In the code chunk below titled `train-fit-lm`, replace "verbatim" with "r" just before the code chunk title and update `data_test` to whatever R object you assigned your testing data to above.
   
 ```{r glance-test}
-test_aug <- augment(slr_train, new_data = data_test)
+test_aug <- augment(slr_train, new_data = hfi_test)
 test_aug
 ```
 
@@ -394,7 +394,7 @@ We can use `broom::augment` to calculate these.
 - In the code chunk below titled `augment`, replace "verbatim" with "r" just before the code chunk title and update `data_train` to whatever R object you assigned your training data to above. 
   
 ```{r augment}
-train_aug <- augment(slr_train, new_data = data_train)
+train_aug <- augment(slr_train, new_data = hfi_train)
 train_aug
 ```
 

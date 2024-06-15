@@ -313,7 +313,7 @@ train_aug <- augment(slr_train, new_data = hfi_test)
 train_aug
 ```
 
-**Linearity**: You already checked if the relationship between `pf_score` and `pf_expression_control` is linear using a scatterplot. We should also verify this condition with a plot of the residuals vs. fitted (predicted) values.
+**Linearity**: You already checked if the relationship between `pf_score` and `pf_expression_control` is linear using a scatter plot. We should also verify this condition with a plot of the residuals vs. fitted (predicted) values.
 
 -   In the code chunk below titled `fitted-residual`, replace "verbatim" with "r" just before the code chunk title.
 
